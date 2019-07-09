@@ -8,7 +8,8 @@ RSpec.feature "Admin user", type: :feature do
                         first_name: "FirstName1",
                         last_name: "LastName1",
                         email: "admin@example.com",
-                        password: "85kseOlqqp!v1@a7"
+                        password: "85kseOlqqp!v1@a7",
+                        password_confirmation: "85kseOlqqp!v1@a7"
                         )
 
     visit admin_login_path
