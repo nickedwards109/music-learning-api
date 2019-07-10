@@ -29,5 +29,9 @@ module MusicTeachingApp
 
     # Don't generate system test files.
     config.generators.system_tests = nil
+
+    # Configure the app as a backend API with no frontend.
+    # This lightens the middleware by not including cookies or flash.
+    config.api_only = true
   end
 end
