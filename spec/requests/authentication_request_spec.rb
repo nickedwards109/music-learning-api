@@ -11,7 +11,7 @@ RSpec.describe "Authentication", type: :request do
                       password_confirmation: "85kseOlqqp!v1@a7"
                       )
 
-    post '/sessions?email=admin%40example.com&password=1234'
+    post '/api/v1/sessions?email=admin%40example.com&password=1234'
     expect(response).to have_http_status(401)
   end
 
@@ -25,7 +25,7 @@ RSpec.describe "Authentication", type: :request do
                       password_confirmation: "85kseOlqqp!v1@a7"
                       )
 
-    post '/sessions?email=admin%40example.com&password=85kseOlqqp%21v1%40a7'
+    post '/api/v1/sessions?email=admin%40example.com&password=85kseOlqqp%21v1%40a7'
     expect(response).to have_http_status(200)
   end
 end
