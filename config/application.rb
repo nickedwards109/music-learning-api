@@ -33,5 +33,7 @@ module MusicTeachingApp
     # Configure the app as a backend API with no frontend.
     # This lightens the middleware by not including cookies or flash.
     config.api_only = true
+
+    config.autoload_paths << Rails.root.join('lib')
   end
 end
