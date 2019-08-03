@@ -4,6 +4,15 @@
 # or operating system, you probably want to add a global ignore instead:
 #   git config --global core.excludesfile '~/.gitignore_global'
 
+# Ignore master cryptographic key
+./config/master.key
+
+# Ignore credentials
+# In theory, these should be safe in version control since they are encrypted,
+# but since the credentials will be different in different deployments, they should
+# stay out of version control.
+./config/credentials.yml.enc
+
 # Ignore bundler config.
 /.bundle
 
