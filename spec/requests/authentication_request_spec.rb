@@ -29,8 +29,35 @@ RSpec.describe "Authentication", type: :request do
 
     post '/api/v1/sessions?session[email]=admin%40example.com&session[password]=85kseOlqqp%21v1%40a7'
     expect(response).to have_http_status(200)
+
+    # Get the JSON web token out of the response body
     parsed_response = JSON.parse(response.body)
     expect(parsed_response).to have_key("token")
-    expect(parsed_response["token"].split('.').count).to eq(3)
+    encoded_token = parsed_response["token"]
+
+    # The JSON web token should have 3 parts (header, payload, signature), delimited by periods
+    expect(encoded_token.split(".").count).to eq(3)
+    header = encoded_token.split(".")[0]
+    payload = encoded_token.split(".")[1]
+    signature = encoded_token.split(".")[2]
+
+    # The header should specify to use the SHA256 algorithm for hashing
+    decoded_header = Base64.decode64(header)
+    parsed_decoded_header = JSON.parse(decoded_header)
+    expect(parsed_decoded_header).to have_key("alg")
+    expect(parsed_decoded_header["alg"]).to eq("HS256")
+
+    # The payload should contain a user id and an expiration date
+    decoded_payload = Base64.decode64(payload)
+    parsed_decoded_payload = JSON.parse(decoded_payload)
+    expect(parsed_decoded_payload).to have_key("id")
+    expect(parsed_decoded_payload).to have_key("exp")
+
+    # The signature should be a Base64URL encoding of the hashed header and payload
+    key = Rails.application.credentials.secret_key_base
+    header_and_payload = header + "." + payload
+    hashed_header_and_payload = OpenSSL::HMAC.digest(OpenSSL::Digest.new("sha256"), key, header_and_payload)
+    expected_signature = Base64.urlsafe_encode64(hashed_header_and_payload).gsub("=", "")
+    expect(signature).to eq(expected_signature)
   end
 end
