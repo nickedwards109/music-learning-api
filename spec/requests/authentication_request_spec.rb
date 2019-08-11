@@ -80,6 +80,11 @@ RSpec.describe "Authentication", type: :request do
     signature = Base64.urlsafe_encode64(hashed_header_and_payload).gsub("=", "")
     token = header + "." + payload + "." + signature
 
+    # If a user tries to access an admin dashboard with no token,
+    # don't tell the user what happened and instead return a 404
+    get "/api/v1/admin/dashboard"
+    expect(response).to have_http_status(404)
+
     # If a user tries to access an admin dashboard with an invalid token,
     # don't tell the user what happened and instead return a 404
     get "/api/v1/admin/dashboard?token=1234"
