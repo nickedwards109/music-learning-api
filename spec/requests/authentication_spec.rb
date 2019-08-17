@@ -11,6 +11,11 @@ RSpec.describe "Authentication", type: :request do
                       password_confirmation: "85kseOlqqp!v1@a7"
                       )
 
+    post '/api/v1/sessions?session[email]=asdf&session[password]=1234'
+    expect(response).to have_http_status(404)
+    parsed_response = JSON.parse(response.body)
+    expect(parsed_response).not_to have_key("token")
+
     post '/api/v1/sessions?session[email]=admin%40example.com&session[password]=1234'
     expect(response).to have_http_status(404)
     parsed_response = JSON.parse(response.body)
