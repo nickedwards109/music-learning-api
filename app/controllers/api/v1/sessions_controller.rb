@@ -5,7 +5,7 @@ class Api::V1::SessionsController < ApplicationController
       token = JsonWebToken.encode({id: user.id})
       render json: {token: token}, status: 200
     else
-      render json: {}, status: 401
+      render json: {}, status: 404
     end
   end
 

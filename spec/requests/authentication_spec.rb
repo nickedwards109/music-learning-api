@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe "Authentication", type: :request do
-  it "responds with a 401 Unauthorized and no JSON web token when a client POSTS with invalid credentials" do
+  it "responds with a 404 Not Found and no JSON web token when a client POSTS with invalid credentials" do
     user = User.create(
                       role: :admin,
                       first_name: "FirstName1",
@@ -12,7 +12,7 @@ RSpec.describe "Authentication", type: :request do
                       )
 
     post '/api/v1/sessions?session[email]=admin%40example.com&session[password]=1234'
-    expect(response).to have_http_status(401)
+    expect(response).to have_http_status(404)
     parsed_response = JSON.parse(response.body)
     expect(parsed_response).not_to have_key("token")
   end
