@@ -56,6 +56,8 @@ RSpec.describe "Authentication", type: :request do
     decoded_payload = Base64.decode64(payload)
     parsed_decoded_payload = JSON.parse(decoded_payload)
     expect(parsed_decoded_payload).to have_key("id")
+    expect(parsed_decoded_payload).to have_key("role")
+    expect(parsed_decoded_payload["role"]).to eq("admin")
     expect(parsed_decoded_payload).to have_key("exp")
 
     # The signature should be a Base64URL encoding of the hashed header and payload
