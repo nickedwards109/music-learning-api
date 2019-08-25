@@ -1,12 +1,24 @@
 class Authorization
   class << self
-    def authorize(request)
+    def verify_signature(request)
       if token = request.params[:token]
         if valid_length(token)
           header, payload, claim_signature = get_parts(token)
           key = Rails.application.credentials.secret_key_base
           valid_signature = sign(header, payload, key)
           claim_signature == valid_signature
+        end
+      else
+        return false
+      end
+    end
+
+    def authorize_admin(request)
+      if token = request.params[:token]
+        if valid_length(token)
+          header, payload, claim_signature = get_parts(token)
+          decoded_payload = decode(payload)
+          decoded_payload.split("role:").last.chomp("\"}") == "admin"
         end
       else
         return false
@@ -31,6 +43,10 @@ class Authorization
 
     def hash(concatenated_header_payload, key)
       OpenSSL::HMAC.digest(OpenSSL::Digest.new("sha256"), key, concatenated_header_payload)
+    end
+
+    def decode(encoded_string)
+      Base64.urlsafe_decode64(encoded_string)
     end
   end
 end

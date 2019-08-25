@@ -5,7 +5,7 @@ class Api::V1::Admin::DashboardController < ApplicationController
   end
 
   def authorize
-    if Authorization.authorize(request) == true
+    if Authorization.authorize_admin(request) == true && Authorization.verify_signature(request)
       render json: {}, status: 200
     else
      render json: {}, status: 404
