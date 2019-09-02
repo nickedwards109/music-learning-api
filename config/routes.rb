@@ -6,6 +6,10 @@ Rails.application.routes.draw do
       namespace :admin do
         get 'dashboard', to: 'dashboard#show'
       end
+
+      namespace :student do
+        get 'dashboard', to: 'dashboard#show'
+      end
     end
   end
 end
