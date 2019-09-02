@@ -13,7 +13,7 @@ class Authorization
       end
     end
 
-    def authorize_admin(request)
+    def authorize(request, role)
       if token = request.params[:token]
         if valid_length(token)
           header, payload, claim_signature = get_parts(token)
@@ -21,22 +21,7 @@ class Authorization
           # This gets the string indicating the role from the token.
           # It relies on the token being structured like:
           # "{\"id\":891,\"role:admin\",\"exp\":1567452413}"
-          decoded_payload.split(",")[1].split(":\"")[1].chomp("\"") == "admin"
-        end
-      else
-        return false
-      end
-    end
-
-    def authorize_student(request)
-      if token = request.params[:token]
-        if valid_length(token)
-          header, payload, claim_signature = get_parts(token)
-          decoded_payload = decode(payload)
-          # This gets the string indicating the role from the token.
-          # It relies on the token being structured like:
-          # "{\"id\":891,\"role:student\",\"exp\":1567452413}"
-          decoded_payload.split(",")[1].split(":\"")[1].chomp("\"") == "student"
+          decoded_payload.split(",")[1].split(":\"")[1].chomp("\"") == role.to_s
         end
       else
         return false

@@ -10,7 +10,7 @@ class Api::V1::Student::DashboardController < ApplicationController
   end
 
   def authorize
-    if !Authorization.authorize_student(request) || !Authorization.verify_signature(request)
+    if !Authorization.authorize(request, :student) || !Authorization.verify_signature(request)
      render json: {}, status: 404
    end
   end

@@ -10,7 +10,7 @@ class Api::V1::Admin::DashboardController < ApplicationController
   end
 
   def authorize
-    if !Authorization.authorize_admin(request) || !Authorization.verify_signature(request)
+    if !Authorization.authorize(request, :admin) || !Authorization.verify_signature(request)
      render json: {}, status: 404
    end
   end
