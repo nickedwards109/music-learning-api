@@ -14,7 +14,7 @@ RSpec.describe "Authorization", type: :request do
     # Generate a valid JSON web token that indicates an admin role for testing purposes
     key = Rails.application.credentials.secret_key_base
     header = Base64.urlsafe_encode64("{\"alg\":\"HS256\"}")
-    admin_role_payload = Base64.urlsafe_encode64("{\"id\":#{user.id},\"exp\":#{Time.now.to_i}},\"role:admin\"}")
+    admin_role_payload = Base64.urlsafe_encode64("{\"id\":#{user.id},\"role\":\"admin\",\"exp\":#{Time.now.to_i}}")
     header_and_payload = header + "." + admin_role_payload
     hashed_header_and_payload = OpenSSL::HMAC.digest(OpenSSL::Digest.new("sha256"), key, header_and_payload)
     signature = Base64.urlsafe_encode64(hashed_header_and_payload).gsub("=", "")
@@ -48,7 +48,7 @@ RSpec.describe "Authorization", type: :request do
     # Generate a valid JSON web token that indicates a student role for testing purposes
     key = Rails.application.credentials.secret_key_base
     header = Base64.urlsafe_encode64("{\"alg\":\"HS256\"}")
-    student_role_payload = Base64.urlsafe_encode64("{\"id\":#{user.id},\"exp\":#{Time.now.to_i}},\"role:student\"}")
+    student_role_payload = Base64.urlsafe_encode64("{\"id\":#{user.id},\"role\":\"student\",\"exp\":#{Time.now.to_i}}")
     header_and_payload = header + "." + student_role_payload
     hashed_header_and_payload = OpenSSL::HMAC.digest(OpenSSL::Digest.new("sha256"), key, header_and_payload)
     signature = Base64.urlsafe_encode64(hashed_header_and_payload).gsub("=", "")

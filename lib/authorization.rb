@@ -18,7 +18,10 @@ class Authorization
         if valid_length(token)
           header, payload, claim_signature = get_parts(token)
           decoded_payload = decode(payload)
-          decoded_payload.split("role:").last.chomp("\"}") == "admin"
+          # This gets the string indicating the role from the token.
+          # It relies on the token being structured like:
+          # "{\"id\":891,\"role:admin\",\"exp\":1567452413}"
+          decoded_payload.split(",")[1].split(":\"")[1].chomp("\"") == "admin"
         end
       else
         return false
