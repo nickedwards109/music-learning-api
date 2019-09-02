@@ -5,4 +5,10 @@ class ApplicationController < ActionController::API
     payload = JSON.parse(decoded_payload)
     id = payload["id"]
   end
+
+  def verify_signature
+    if !Authorization.verify_signature(request)
+     render json: {}, status: 404
+   end
+  end
 end

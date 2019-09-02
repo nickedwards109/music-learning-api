@@ -1,5 +1,6 @@
 class Api::V1::Student::DashboardController < ApplicationController
-  before_action :authorize
+  before_action :authorize_student
+  before_action :verify_signature
 
   def show
     token = dashboard_params[:token]
@@ -9,8 +10,8 @@ class Api::V1::Student::DashboardController < ApplicationController
     render json: {firstName: first_name}, status: 200
   end
 
-  def authorize
-    if !Authorization.authorize(request, :student) || !Authorization.verify_signature(request)
+  def authorize_student
+    if !Authorization.authorize(request, :student)
      render json: {}, status: 404
    end
   end
