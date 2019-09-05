@@ -14,7 +14,7 @@ RSpec.describe "Student Dashboard", type: :request do
     # Generate a valid JSON web token that indicates an admin role for testing purposes
     key = Rails.application.credentials.secret_key_base
     header = Base64.urlsafe_encode64("{\"alg\":\"HS256\"}")
-    student_role_payload = Base64.urlsafe_encode64("{\"id\":#{user.id},\"role\":\"student\",\"exp\":#{Time.now.to_i}}")
+    student_role_payload = Base64.urlsafe_encode64("{\"id\":#{user.id},\"role\":\"student\"}")
     header_and_payload = header + "." + student_role_payload
     hashed_header_and_payload = OpenSSL::HMAC.digest(OpenSSL::Digest.new("sha256"), key, header_and_payload)
     signature = Base64.urlsafe_encode64(hashed_header_and_payload).gsub("=", "")

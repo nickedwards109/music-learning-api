@@ -20,8 +20,8 @@ class Authorization
           decoded_payload = decode(payload)
           # This gets the string indicating the role from the token.
           # It relies on the token being structured like:
-          # "{\"id\":891,\"role:admin\",\"exp\":1567452413}"
-          decoded_payload.split(",")[1].split(":\"")[1].chomp("\"") == role.to_s
+          # "{\"id\":891,\"role:admin\"}"
+          decoded_payload.split(",")[1].split(":\"")[1].chomp("\"}") == role.to_s
         end
       else
         return false
