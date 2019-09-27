@@ -66,4 +66,35 @@ RSpec.describe User, type: :model do
       expect(authenticated).to eq(user)
     end
   end
+
+  describe "user roles" do
+    it "allows for a user to be an admin, a teacher, or a student" do
+      admin = User.create(role: :admin,
+                         first_name: "FirstName1",
+                         last_name: "LastName1",
+                         email: "admin@example.com",
+                         password: '85kseOlqqp!v1@a7',
+                         password_confirmation: '85kseOlqqp!v1@a7'
+                         )
+      expect(admin).to be_valid
+
+      teacher = User.create(role: :teacher,
+                         first_name: "FirstName1",
+                         last_name: "LastName1",
+                         email: "admin@example.com",
+                         password: '85kseOlqqp!v1@a7',
+                         password_confirmation: '85kseOlqqp!v1@a7'
+                         )
+      expect(teacher).to be_valid
+
+      student = User.create(role: :student,
+                         first_name: "FirstName1",
+                         last_name: "LastName1",
+                         email: "admin@example.com",
+                         password: '85kseOlqqp!v1@a7',
+                         password_confirmation: '85kseOlqqp!v1@a7'
+                         )
+      expect(student).to be_valid
+    end
+  end
 end
