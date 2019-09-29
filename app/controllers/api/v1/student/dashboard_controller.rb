@@ -3,7 +3,7 @@ class Api::V1::Student::DashboardController < ApplicationController
   before_action :verify_signature
 
   def show
-    token = dashboard_params[:token]
+    token = request.headers["TOKEN"]
     id = get_id(token)
     user = User.find(id)
     first_name = user.first_name
