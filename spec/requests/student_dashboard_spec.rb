@@ -20,7 +20,7 @@ RSpec.describe "Student Dashboard", type: :request do
     signature = Base64.urlsafe_encode64(hashed_header_and_payload).gsub("=", "")
     student_token = header + "." + student_role_payload + "." + signature
 
-    get "/api/v1/student/dashboard?token=#{student_token}"
+    get "/api/v1/student/dashboard", params: {}, headers: { TOKEN: student_token }
     parsed_response = JSON.parse(response.body)
     first_name = parsed_response["firstName"]
     expect(first_name).to eq(user.first_name)

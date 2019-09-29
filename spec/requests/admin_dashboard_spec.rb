@@ -20,8 +20,10 @@ RSpec.describe "Admin Dashboard", type: :request do
     signature = Base64.urlsafe_encode64(hashed_header_and_payload).gsub("=", "")
     admin_token = header + "." + admin_role_payload + "." + signature
 
-    get "/api/v1/admin/dashboard?token=#{admin_token}"
+    get "/api/v1/admin/dashboard", params: {}, headers: { TOKEN: admin_token }
+
     parsed_response = JSON.parse(response.body)
+
     first_name = parsed_response["firstName"]
     expect(first_name).to eq(user.first_name)
   end

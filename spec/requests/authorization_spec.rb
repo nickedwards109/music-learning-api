@@ -31,7 +31,7 @@ RSpec.describe "Authorization", type: :request do
     # expect(response).to have_http_status(404)
 
     # If a user tries to access an admin dashboard with a valid token, return a 200
-    get "/api/v1/admin/dashboard?token=#{admin_token}"
+    get "/api/v1/admin/dashboard", params: {}, headers: { TOKEN: admin_token }
     expect(response).to have_http_status(200)
   end
 
@@ -55,7 +55,7 @@ RSpec.describe "Authorization", type: :request do
     student_token = header + "." + student_role_payload + "." + signature
 
     # If a student tries to access an admin dashboard, return a 404
-    get "/api/v1/admin/dashboard?token=#{student_token}"
+    get "/api/v1/admin/dashboard", params: {}, headers: { TOKEN: student_token}
     expect(response).to have_http_status(404)
   end
 end

@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe "Teachers", type: :request do
   it "does not create a teacher when the request does not include a token" do
     initial_teachers_count = User.where(role: "teacher").count
-    post '/api/v1/users?user[first_name]=John&user[last_name]=Doe&user[email]=john%40example.com&user[password]=85kseOlqqp!v1@a7&user[password_confirmation]=85kseOlqqp!v1@a7'
+    post '/api/v1/users', params: { user: { role: "teacher", first_name: "John", last_name: "Doe", email: "john%40example.com", password: "85kseOlqqp!v1@a7", password_confirmation: "85kseOlqqp!v1@a7" } }
     afterward_teachers_count = User.where(role: "teacher").count
     expect(afterward_teachers_count).to eq(initial_teachers_count)
   end
@@ -28,7 +28,7 @@ RSpec.describe "Teachers", type: :request do
     student_token = header + "." + student_role_payload + "." + signature
 
     initial_teachers_count = User.where(role: "teacher").count
-    post "/api/v1/users?user[first_name]=John&user[last_name]=Doe&user[email]=john%40example.com&user[password]=85kseOlqqp!v1@a7&user[password_confirmation]=85kseOlqqp!v1@a7&token=#{student_token}"
+    post "/api/v1/users", params: { user: { role: "teacher", first_name: "John", last_name: "Doe", email: "john%40example.com", password: "85kseOlqqp!v1@a7", password_confirmation: "85kseOlqqp!v1@a7" } }, headers: { "TOKEN": student_token }
     afterward_teachers_count = User.where(role: "teacher").count
     expect(afterward_teachers_count).to eq(initial_teachers_count)
   end
@@ -53,7 +53,7 @@ RSpec.describe "Teachers", type: :request do
     admin_token = header + "." + admin_role_payload + "." + signature
 
     initial_teachers_count = User.where(role: "teacher").count
-    post "/api/v1/users?user[first_name]=John&user[last_name]=Doe&user[email]=john%40example.com&user[password]=85kseOlqqp!v1@a7&user[password_confirmation]=85kseOlqqp!v1@a7&token=#{admin_token}"
+    post "/api/v1/users", params: { user: { role: "teacher", first_name: "John", last_name: "Doe", email: "john%40example.com", password: "85kseOlqqp!v1@a7", password_confirmation: "85kseOlqqp!v1@a7" } }, headers: { "TOKEN": admin_token}
     afterward_teachers_count = User.where(role: "teacher").count
     expect(afterward_teachers_count).to eq(initial_teachers_count + 1)
   end
