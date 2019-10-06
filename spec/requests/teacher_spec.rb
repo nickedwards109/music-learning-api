@@ -59,5 +59,14 @@ RSpec.describe "Teachers", type: :request do
     afterward_teachers_count = User.where(role: "teacher").count
     expect(afterward_teachers_count).to eq(initial_teachers_count + 1)
     expect(response).to have_http_status(200)
+    response_data = JSON.parse(response.body)
+    teachers = response_data["users"]
+    expect(teachers.count).to eq(afterward_teachers_count)
+    teacher = JSON.parse(teachers.first)
+    expect(teacher).to have_key("first_name")
+    expect(teacher).to have_key("last_name")
+    expect(teacher).to have_key("email")
+    expect(teacher).to have_key("role")
+    expect(teacher).not_to have_key("password_digest")
   end
 end
