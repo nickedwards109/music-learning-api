@@ -6,6 +6,7 @@ RSpec.describe "Teachers", type: :request do
     post '/api/v1/users', params: { user: { role: "teacher", first_name: "John", last_name: "Doe", email: "john%40example.com", password: "85kseOlqqp!v1@a7", password_confirmation: "85kseOlqqp!v1@a7" } }
     afterward_teachers_count = User.where(role: "teacher").count
     expect(afterward_teachers_count).to eq(initial_teachers_count)
+    expect(response).to have_http_status(404)
   end
 
   it "does not create a teacher when the request includes a signed token from a non-admin user" do
@@ -31,6 +32,7 @@ RSpec.describe "Teachers", type: :request do
     post "/api/v1/users", params: { user: { role: "teacher", first_name: "John", last_name: "Doe", email: "john%40example.com", password: "85kseOlqqp!v1@a7", password_confirmation: "85kseOlqqp!v1@a7" } }, headers: { "TOKEN": student_token }
     afterward_teachers_count = User.where(role: "teacher").count
     expect(afterward_teachers_count).to eq(initial_teachers_count)
+    expect(response).to have_http_status(404)
   end
 
   it "creates a teacher when the request includes a signed token from an admin user" do
@@ -56,5 +58,6 @@ RSpec.describe "Teachers", type: :request do
     post "/api/v1/users", params: { user: { role: "teacher", first_name: "John", last_name: "Doe", email: "john%40example.com", password: "85kseOlqqp!v1@a7", password_confirmation: "85kseOlqqp!v1@a7" } }, headers: { "TOKEN": admin_token}
     afterward_teachers_count = User.where(role: "teacher").count
     expect(afterward_teachers_count).to eq(initial_teachers_count + 1)
+    expect(response).to have_http_status(200)
   end
 end
