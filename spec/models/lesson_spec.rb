@@ -20,5 +20,12 @@ RSpec.describe Lesson, type: :model do
       expect(lesson.assets.first).to eq(asset)
       expect(lesson.assets.first.storageURL).to eq("https://www.example.com/example.wmv")
     end
+
+    it "can create a Lesson and its associated Assets in a single command" do
+      lesson_attributes = {title: "This is a title.", text: "This is the text of the lesson.", assets_attributes: [{storageURL: "https://www.example.com/example.wmv"}]}
+      lesson = Lesson.create(lesson_attributes)
+      expect(lesson).to be_valid
+      expect(lesson.assets.first).to be_valid
+    end
   end
 end
