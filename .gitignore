@@ -13,6 +13,9 @@
 # stay out of version control.
 ./config/credentials.yml.enc
 
+# Ignore enironment variables
+./config/local_env.yml
+
 # Ignore bundler config.
 /.bundle
 
