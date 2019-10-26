@@ -5,16 +5,16 @@
 #   git config --global core.excludesfile '~/.gitignore_global'
 
 # Ignore master cryptographic key
-./config/master.key
+/config/master.key
 
 # Ignore credentials
 # In theory, these should be safe in version control since they are encrypted,
 # but since the credentials will be different in different deployments, they should
 # stay out of version control.
-./config/credentials.yml.enc
+/config/credentials.yml.enc
 
-# Ignore enironment variables
-./config/local_env.yml
+# Ignore environment variables
+/config/local_env.yml
 
 # Ignore bundler config.
 /.bundle
@@ -34,6 +34,3 @@
 
 /public/assets
 .byebug_history
-
-# Ignore master key for decrypting credentials and more.
-/config/master.key
