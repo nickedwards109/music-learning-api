@@ -6,7 +6,7 @@ class Api::V1::LessonsController < ApplicationController
     lesson = Lesson.create(lesson_params)
     lesson_assets = lesson.assets
     if lesson.valid? && lesson_assets.count > 0
-      render json: {lesson: lesson, assets: lesson_assets}, status: 200
+      render json: {lesson_id: lesson.id}, status: 200
     else
       render json: {}, status: 404
     end

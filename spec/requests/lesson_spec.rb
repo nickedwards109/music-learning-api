@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe "Lessons", type: :request do
-  it "renders JSON for the lesson show page when a lesson and its associated asset are created" do
+  it "creates a lesson and its associated assets, and renders JSON containing the new lesson's id" do
     user = User.create(
                       role: :teacher,
                       first_name: "FirstName1",
@@ -36,13 +36,6 @@ RSpec.describe "Lessons", type: :request do
 
     parsed_response = JSON.parse(response.body)
 
-    expect(parsed_response).to have_key("lesson")
-    expect(parsed_response["lesson"]).to have_key("title")
-    expect(parsed_response["lesson"]).to have_key("text")
-
-    expect(parsed_response).to have_key("assets")
-    expect(parsed_response["assets"].class).to eq(Array)
-    expect(parsed_response["assets"][0]).to have_key("storageURL")
-    expect(parsed_response["assets"][0]).to have_key("lesson_id")
+    expect(parsed_response).to have_key("lesson_id")
   end
 end
