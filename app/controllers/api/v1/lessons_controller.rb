@@ -12,6 +12,16 @@ class Api::V1::LessonsController < ApplicationController
     end
   end
 
+  def show
+    lesson = Lesson.find(params["id"])
+    render json: {
+      id: lesson.id,
+      title: lesson.title,
+      text: lesson.text,
+      assets: lesson.assets
+    }
+  end
+
   private
 
   def lesson_params
