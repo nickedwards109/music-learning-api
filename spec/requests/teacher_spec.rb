@@ -1,15 +1,15 @@
 require 'rails_helper'
 
 RSpec.describe "Teachers", type: :request do
-  it "does not create a teacher when the request does not include a token" do
-    initial_teachers_count = User.where(role: "teacher").count
-    post '/api/v1/users', params: { user: { role: "teacher", first_name: "John", last_name: "Doe", email: "john%40example.com", password: "85kseOlqqp!v1@a7", password_confirmation: "85kseOlqqp!v1@a7" } }
-    afterward_teachers_count = User.where(role: "teacher").count
-    expect(afterward_teachers_count).to eq(initial_teachers_count)
+  it "does not send a teacher creation email when the request does not include a token" do
+    initial_emails_count = ActionMailer::Base.deliveries.count
+    post '/api/v1/users', params: { user: { role: "teacher", first_name: "John", last_name: "Doe", email: "john%40example.com"} }
+    afterward_emails_count = ActionMailer::Base.deliveries.count
+    expect(afterward_emails_count).to eq(initial_emails_count)
     expect(response).to have_http_status(404)
   end
 
-  it "does not create a teacher when the request includes a signed token from a non-admin user" do
+  it "does not send a teacher creation email when the request includes a signed token from a non-admin user" do
     student = User.create(
                          role: :student,
                          first_name: "FirstName1",
@@ -28,14 +28,14 @@ RSpec.describe "Teachers", type: :request do
     signature = Base64.urlsafe_encode64(hashed_header_and_payload).gsub("=", "")
     student_token = header + "." + student_role_payload + "." + signature
 
-    initial_teachers_count = User.where(role: "teacher").count
-    post "/api/v1/users", params: { user: { role: "teacher", first_name: "John", last_name: "Doe", email: "john%40example.com", password: "85kseOlqqp!v1@a7", password_confirmation: "85kseOlqqp!v1@a7" } }, headers: { "TOKEN": student_token }
-    afterward_teachers_count = User.where(role: "teacher").count
-    expect(afterward_teachers_count).to eq(initial_teachers_count)
+    initial_emails_count = ActionMailer::Base.deliveries.count
+    post '/api/v1/users', params: { user: { role: "teacher", first_name: "John", last_name: "Doe", email: "john%40example.com"} }
+    afterward_emails_count = ActionMailer::Base.deliveries.count
+    expect(afterward_emails_count).to eq(initial_emails_count)
     expect(response).to have_http_status(404)
   end
 
-  it "creates a teacher when the request includes a signed token from an admin user" do
+  it "sends a teacher creation email when the request includes a signed token from an admin user" do
     admin = User.create(
                         role: :admin,
                         first_name: "FirstName1",
@@ -54,19 +54,10 @@ RSpec.describe "Teachers", type: :request do
     signature = Base64.urlsafe_encode64(hashed_header_and_payload).gsub("=", "")
     admin_token = header + "." + admin_role_payload + "." + signature
 
-    initial_teachers_count = User.where(role: "teacher").count
-    post "/api/v1/users", params: { user: { role: "teacher", first_name: "John", last_name: "Doe", email: "john%40example.com", password: "85kseOlqqp!v1@a7", password_confirmation: "85kseOlqqp!v1@a7" } }, headers: { "TOKEN": admin_token}
-    afterward_teachers_count = User.where(role: "teacher").count
-    expect(afterward_teachers_count).to eq(initial_teachers_count + 1)
+    initial_emails_count = ActionMailer::Base.deliveries.count
+    post '/api/v1/users', params: { user: { role: "teacher", first_name: "John", last_name: "Doe", email: "john%40example.com"} }
+    afterward_emails_count = ActionMailer::Base.deliveries.count
+    expect(afterward_emails_count).to eq(initial_emails_count + 1)
     expect(response).to have_http_status(200)
-    response_data = JSON.parse(response.body)
-    teachers = response_data["users"]
-    expect(teachers.count).to eq(afterward_teachers_count)
-    teacher = JSON.parse(teachers.first)
-    expect(teacher).to have_key("first_name")
-    expect(teacher).to have_key("last_name")
-    expect(teacher).to have_key("email")
-    expect(teacher).to have_key("role")
-    expect(teacher).not_to have_key("password_digest")
   end
 end
