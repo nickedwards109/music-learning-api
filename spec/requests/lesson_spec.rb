@@ -70,4 +70,39 @@ RSpec.describe "Lessons", type: :request do
     expect(response_lesson["text"]).to eq(lesson.text)
     expect(response_lesson["assets"][0]["storageURL"]).to eq(storageURL)
   end
+
+  it "responds to a lessons index endpoint" do
+    lesson_1 = Lesson.create(title: "This is a title", text: "This is text.")
+    storageURL_1 = 'http://www.example.com/assets/1'
+    asset_1 = Asset.create(storageURL: storageURL_1, lesson_id: lesson_1.id)
+
+    lesson_2 = Lesson.create(title: "This is another title", text: "This is more text.")
+    storageURL_2 = 'http://www.example.com/assets/2'
+    asset_2 = Asset.create(storageURL: storageURL_2, lesson_id: lesson_2.id)
+
+    user = User.create(
+                      role: :teacher,
+                      first_name: "FirstName1",
+                      last_name: "LastName1",
+                      email: "teacher@example.com",
+                      password: "85kseOlqqp!v1@a7",
+                      password_confirmation: "85kseOlqqp!v1@a7"
+                      )
+
+    # Generate a valid JSON web token that indicates a teacher role for testing purposes
+    key = Rails.application.credentials.secret_key_base
+    header = Base64.urlsafe_encode64("{\"alg\":\"HS256\"}")
+    teacher_role_payload = Base64.urlsafe_encode64("{\"id\":#{user.id},\"role\":\"teacher\"}")
+    header_and_payload = header + "." + teacher_role_payload
+    hashed_header_and_payload = OpenSSL::HMAC.digest(OpenSSL::Digest.new("sha256"), key, header_and_payload)
+    signature = Base64.urlsafe_encode64(hashed_header_and_payload).gsub("=", "")
+    teacher_token = header + "." + teacher_role_payload + "." + signature
+
+    get "/api/v1/lessons", headers: { TOKEN: teacher_token }
+
+    parsed_response = JSON.parse(response.body)
+    expect(parsed_response["lessons"].count).to eq(2)
+    expect(parsed_response["lessons"][0]["title"]).to eq("This is a title")
+    expect(parsed_response["lessons"][0]["id"]).to eq(lesson_1.id)
+  end
 end
