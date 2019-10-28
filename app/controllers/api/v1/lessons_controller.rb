@@ -22,6 +22,13 @@ class Api::V1::LessonsController < ApplicationController
     }
   end
 
+  def index
+    lessons = Lesson.all
+    render json: {
+      lessons: lessons
+    }
+  end
+
   private
 
   def lesson_params
