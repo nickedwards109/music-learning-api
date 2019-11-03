@@ -6,6 +6,8 @@ Rails.application.routes.draw do
 
       post 'send_new_user_email', to: 'users#send_new_user_email'
 
+      post 'set_password', to: 'users#set_password'
+
       post 'presigned_upload_url', to: 'assets#presigned_upload_url'
 
       namespace :admin do
