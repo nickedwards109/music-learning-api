@@ -8,7 +8,8 @@ RSpec.describe UserMailer, type: :mailer do
       expect(mail.subject).to eq("Set a password for your new account")
       expect(mail.body).to include("John")
       expect(mail.body).to include("teacher")
-      expect(mail.body).to include("/set_password?uuid=")
+      expect(mail.body).to include("/set_password?email=johndoe%40example.com")
+      expect(mail.body).to include("uuid=")
     end
   end
 end
