@@ -30,7 +30,7 @@ RSpec.describe 'Resetting a password', type: :request do
     expect(password_reset.user).to eq(user)
     expect(ActionMailer::Base.deliveries.last.body.raw_source).to include(password_reset.uuid)
 
-    expect(response).to have_http_status(200)
+    expect(response).to have_http_status(204)
   end
 
   it 'does not start the password reset process if the provided email does not belong to a user' do
