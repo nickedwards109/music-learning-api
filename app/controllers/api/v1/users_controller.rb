@@ -1,6 +1,6 @@
 class Api::V1::UsersController < ApplicationController
-  before_action :authorize_admin, except: [:set_password, :send_password_reset_email]
-  before_action :verify_signature, except: [:set_password, :send_password_reset_email]
+  before_action :authorize_admin, except: [:set_password, :send_password_reset_email, :reset_password]
+  before_action :verify_signature, except: [:set_password, :send_password_reset_email, :reset_password]
 
   def send_new_user_email
     UserMailer.with(params: user_params).set_password_email.deliver_now
@@ -18,6 +18,22 @@ class Api::V1::UsersController < ApplicationController
       }
       if user = User.create(user_attributes)
         not_yet_created_user.destroy
+        render json: {}, status: 204
+      else
+        render json: {}, status: 404
+      end
+    else
+      render json: {}, status: 404
+    end
+  end
+
+  def reset_password
+    if password_reset = PasswordReset.find_by(uuid: user_params[:uuid])
+      user = password_reset.user
+      user.password = user_params[:password]
+      user.password_confirmation = user_params[:password_confirmation]
+      if user.save
+        password_reset.destroy
         render json: {}, status: 204
       else
         render json: {}, status: 404

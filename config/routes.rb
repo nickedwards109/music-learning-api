@@ -10,6 +10,8 @@ Rails.application.routes.draw do
 
       post 'initiate_password_reset', to: 'users#send_password_reset_email'
 
+      post 'reset_password', to: 'users#reset_password'
+
       post 'presigned_upload_url', to: 'assets#presigned_upload_url'
 
       namespace :admin do
