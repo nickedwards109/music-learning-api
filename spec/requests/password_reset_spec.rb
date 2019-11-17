@@ -51,4 +51,50 @@ RSpec.describe 'Resetting a password', type: :request do
 
     expect(response).to have_http_status(404)
   end
+
+  it 'enables a user to reset their password' do
+    password_reset = PasswordReset.create(user_id: user.id)
+
+    initial_password_reset_count = PasswordReset.all.count
+    initial_password_digest = user.password_digest
+
+    post '/api/v1/reset_password', params: {
+      user: {
+        uuid: password_reset.uuid,
+        password: 'newPassword9t!l93',
+        password_confirmation: 'newPassword9t!l93'
+      }
+    }
+    expect(response).to have_http_status(204)
+
+    user.reload
+
+    final_password_reset_count = PasswordReset.all.count
+    expect(final_password_reset_count).to eq(initial_password_reset_count - 1)
+
+    final_password_digest = user.password_digest
+    expect(final_password_digest).not_to eq(initial_password_digest)
+  end
+
+  it 'does not reset a password when the request supplies an invalid uuid' do
+    initial_password_reset_count = PasswordReset.all.count
+    initial_password_digest = user.password_digest
+
+    post '/api/v1/reset_password', params: {
+      user: {
+        uuid: '0',
+        password: 'newPassword9t!l93',
+        password_confirmation: 'newPassword9t!l93'
+      }
+    }
+    expect(response).to have_http_status(404)
+
+    user.reload
+
+    final_password_reset_count = PasswordReset.all.count
+    expect(final_password_reset_count).to eq(initial_password_reset_count)
+
+    final_password_digest = user.password_digest
+    expect(final_password_digest).to eq(initial_password_digest)
+  end
 end
