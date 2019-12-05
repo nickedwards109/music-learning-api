@@ -4,6 +4,8 @@ Rails.application.routes.draw do
       resources :sessions, only: [:create]
       resources :lessons, only: [:create, :show, :index]
 
+      get '/students', to: 'users#index'
+
       post 'send_new_user_email', to: 'users#send_new_user_email'
 
       post 'set_password', to: 'users#set_password'

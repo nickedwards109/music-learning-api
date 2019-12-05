@@ -1,5 +1,6 @@
 class Api::V1::UsersController < ApplicationController
-  before_action :authorize_admin, except: [:set_password, :send_password_reset_email, :reset_password]
+  before_action :authorize_admin, except: [:set_password, :send_password_reset_email, :reset_password, :index]
+  before_action :authorize_teacher, only: [:index]
   before_action :verify_signature, except: [:set_password, :send_password_reset_email, :reset_password]
 
   def send_new_user_email
@@ -53,10 +54,34 @@ class Api::V1::UsersController < ApplicationController
     end
   end
 
+  def index
+    if request.fullpath.split('/').last == 'students'
+      students = User.where(role: :student)
+      students_attributes = students.map do |student|
+        {
+          id: student.id,
+          first_name: student.first_name,
+          last_name: student.last_name,
+          email: student.email
+        }
+      end
+      students_response = {students: students_attributes}
+      render json: students_response
+    else
+      render json: {}, status: 404
+    end
+  end
+
   private
 
   def authorize_admin
     if !Authorization.authorize(request, :admin)
+     render json: {}, status: 404
+    end
+  end
+
+  def authorize_teacher
+    if !Authorization.authorize(request, :teacher)
      render json: {}, status: 404
     end
   end
