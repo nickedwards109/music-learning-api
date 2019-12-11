@@ -9,12 +9,4 @@ class Api::V1::Teacher::DashboardController < ApplicationController
     first_name = user.first_name
     render json: {firstName: first_name}, status: 200
   end
-
-  private
-
-  def authorize_teacher
-    if !Authorization.authorize(request, :teacher)
-     render json: {}, status: 404
-   end
-  end
 end

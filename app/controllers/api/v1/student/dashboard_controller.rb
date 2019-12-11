@@ -10,12 +10,6 @@ class Api::V1::Student::DashboardController < ApplicationController
     render json: {firstName: first_name}, status: 200
   end
 
-  def authorize_student
-    if !Authorization.authorize(request, :student)
-     render json: {}, status: 404
-   end
-  end
-
   private
 
   def dashboard_params

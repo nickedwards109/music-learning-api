@@ -11,4 +11,22 @@ class ApplicationController < ActionController::API
      render json: {}, status: 404
    end
   end
+
+  def authorize_admin
+    if !Authorization.authorize(request, :admin)
+     render json: {}, status: 404
+    end
+  end
+
+  def authorize_teacher
+    if !Authorization.authorize(request, :teacher)
+     render json: {}, status: 404
+    end
+  end
+
+  def authorize_student
+    if !Authorization.authorize(request, :student)
+     render json: {}, status: 404
+   end
+  end
 end

@@ -74,18 +74,6 @@ class Api::V1::UsersController < ApplicationController
 
   private
 
-  def authorize_admin
-    if !Authorization.authorize(request, :admin)
-     render json: {}, status: 404
-    end
-  end
-
-  def authorize_teacher
-    if !Authorization.authorize(request, :teacher)
-     render json: {}, status: 404
-    end
-  end
-
   def user_params
     params.require(:user).permit(:role, :first_name, :last_name, :email, :password, :password_confirmation, :uuid)
   end

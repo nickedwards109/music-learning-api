@@ -34,10 +34,4 @@ class Api::V1::LessonsController < ApplicationController
   def lesson_params
     params.require(:lesson).permit(:title, :text, assets_attributes: [ :storageURL ])
   end
-
-  def authorize_teacher
-    if !Authorization.authorize(request, :teacher)
-     render json: {}, status: 404
-   end
-  end
 end
