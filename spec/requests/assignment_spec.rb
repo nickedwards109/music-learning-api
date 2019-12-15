@@ -35,11 +35,13 @@ RSpec.describe 'Assignments', type: :request do
     )
 
     expect(Assignment.all.count).to eq(0)
+    expect(ActionMailer::Base.deliveries.count).to eq(0)
 
     post "/api/v1/assignments?assignment[user_id]=#{student.id}&assignment[lesson_id]=#{lesson.id}", headers: { TOKEN: teacher_token }
 
     expect(response).to have_http_status(204)
     expect(Assignment.all.count).to eq(1)
+    expect(ActionMailer::Base.deliveries.count).to eq(1)
     expect(lesson.students.first.first_name).to eq("StudentFirstName1")
     expect(student.lessons.first.title).to eq("This is a lesson title")
   end
@@ -60,11 +62,13 @@ RSpec.describe 'Assignments', type: :request do
     )
 
     expect(Assignment.all.count).to eq(0)
+    expect(ActionMailer::Base.deliveries.count).to eq(0)
 
     post "/api/v1/assignments?assignment[user_id]=#{student.id}&assignment[lesson_id]=#{lesson.id}"
 
     expect(response).to have_http_status(404)
     expect(Assignment.all.count).to eq(0)
+    expect(ActionMailer::Base.deliveries.count).to eq(0)
     expect(lesson.students.count).to eq(0)
     expect(student.lessons.count).to eq(0)
   end
