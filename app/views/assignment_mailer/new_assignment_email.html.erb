@@ -1,0 +1,14 @@
+<div>
+  <div>
+    Hi, <%= @assignment_email_content[:student_first_name] %>!
+  </div>
+  <div>
+    The lesson "<%= @assignment_email_content[:lesson_title] %>" has been assigned to you.
+  </div>
+  <div>
+    You can visit the lesson at: <a href="<%= @assignment_email_content[:lesson_url] %>"><%= @assignment_email_content[:lesson_url] %></a>.
+  </div>
+  <div>
+    Happy study!
+  </div>
+</div>
