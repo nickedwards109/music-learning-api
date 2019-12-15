@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe "Lessons", type: :request do
   it "creates a lesson and its associated assets, and renders JSON containing the new lesson's id" do
-    user = User.create(
+    teacher = User.create(
                       role: :teacher,
                       first_name: "FirstName1",
                       last_name: "LastName1",
@@ -11,14 +11,7 @@ RSpec.describe "Lessons", type: :request do
                       password_confirmation: "85kseOlqqp!v1@a7"
                       )
 
-    # Generate a valid JSON web token that indicates a teacher role for testing purposes
-    key = Rails.application.credentials.secret_key_base
-    header = Base64.urlsafe_encode64("{\"alg\":\"HS256\"}")
-    teacher_role_payload = Base64.urlsafe_encode64("{\"id\":#{user.id},\"role\":\"teacher\"}")
-    header_and_payload = header + "." + teacher_role_payload
-    hashed_header_and_payload = OpenSSL::HMAC.digest(OpenSSL::Digest.new("sha256"), key, header_and_payload)
-    signature = Base64.urlsafe_encode64(hashed_header_and_payload).gsub("=", "")
-    teacher_token = header + "." + teacher_role_payload + "." + signature
+    teacher_token = SpecHelper.generate_token(teacher)
 
     lesson_title = "This is a title"
     lesson_text = "This is text."
@@ -44,7 +37,7 @@ RSpec.describe "Lessons", type: :request do
     storageURL = 'http://www.example.com/assets/1'
     asset = Asset.create(storageURL: storageURL, lesson_id: lesson.id)
 
-    user = User.create(
+    teacher = User.create(
                       role: :teacher,
                       first_name: "FirstName1",
                       last_name: "LastName1",
@@ -53,14 +46,7 @@ RSpec.describe "Lessons", type: :request do
                       password_confirmation: "85kseOlqqp!v1@a7"
                       )
 
-    # Generate a valid JSON web token that indicates a teacher role for testing purposes
-    key = Rails.application.credentials.secret_key_base
-    header = Base64.urlsafe_encode64("{\"alg\":\"HS256\"}")
-    teacher_role_payload = Base64.urlsafe_encode64("{\"id\":#{user.id},\"role\":\"teacher\"}")
-    header_and_payload = header + "." + teacher_role_payload
-    hashed_header_and_payload = OpenSSL::HMAC.digest(OpenSSL::Digest.new("sha256"), key, header_and_payload)
-    signature = Base64.urlsafe_encode64(hashed_header_and_payload).gsub("=", "")
-    teacher_token = header + "." + teacher_role_payload + "." + signature
+    teacher_token = SpecHelper.generate_token(teacher)
 
     get "/api/v1/lessons/#{lesson.id}", headers: { TOKEN: teacher_token }
 
@@ -80,7 +66,7 @@ RSpec.describe "Lessons", type: :request do
     storageURL_2 = 'http://www.example.com/assets/2'
     asset_2 = Asset.create(storageURL: storageURL_2, lesson_id: lesson_2.id)
 
-    user = User.create(
+    teacher = User.create(
                       role: :teacher,
                       first_name: "FirstName1",
                       last_name: "LastName1",
@@ -89,14 +75,7 @@ RSpec.describe "Lessons", type: :request do
                       password_confirmation: "85kseOlqqp!v1@a7"
                       )
 
-    # Generate a valid JSON web token that indicates a teacher role for testing purposes
-    key = Rails.application.credentials.secret_key_base
-    header = Base64.urlsafe_encode64("{\"alg\":\"HS256\"}")
-    teacher_role_payload = Base64.urlsafe_encode64("{\"id\":#{user.id},\"role\":\"teacher\"}")
-    header_and_payload = header + "." + teacher_role_payload
-    hashed_header_and_payload = OpenSSL::HMAC.digest(OpenSSL::Digest.new("sha256"), key, header_and_payload)
-    signature = Base64.urlsafe_encode64(hashed_header_and_payload).gsub("=", "")
-    teacher_token = header + "." + teacher_role_payload + "." + signature
+    teacher_token = SpecHelper.generate_token(teacher)
 
     get "/api/v1/lessons", headers: { TOKEN: teacher_token }
 

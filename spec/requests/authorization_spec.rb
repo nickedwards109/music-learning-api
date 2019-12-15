@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe "Authorization", type: :request do
   it "allows access to the admin dashboard if the request contains a valid JSON web token indicating an admin role in the payload" do
-    user = User.create(
+    admin = User.create(
                       role: :admin,
                       first_name: "FirstName1",
                       last_name: "LastName1",
@@ -11,14 +11,7 @@ RSpec.describe "Authorization", type: :request do
                       password_confirmation: "85kseOlqqp!v1@a7"
                       )
 
-    # Generate a valid JSON web token that indicates an admin role for testing purposes
-    key = Rails.application.credentials.secret_key_base
-    header = Base64.urlsafe_encode64("{\"alg\":\"HS256\"}")
-    admin_role_payload = Base64.urlsafe_encode64("{\"id\":#{user.id},\"role\":\"admin\"}")
-    header_and_payload = header + "." + admin_role_payload
-    hashed_header_and_payload = OpenSSL::HMAC.digest(OpenSSL::Digest.new("sha256"), key, header_and_payload)
-    signature = Base64.urlsafe_encode64(hashed_header_and_payload).gsub("=", "")
-    admin_token = header + "." + admin_role_payload + "." + signature
+    admin_token = SpecHelper.generate_token(admin)
 
     # If a user tries to access an admin dashboard with no token,
     # don't tell the user what happened and instead return a 404
@@ -36,7 +29,7 @@ RSpec.describe "Authorization", type: :request do
   end
 
   it "does not allow access to the admin dashboard if the request contains a JSON web token indicating an student role in the payload" do
-    user = User.create(
+    student = User.create(
                       role: :student,
                       first_name: "FirstName1",
                       last_name: "LastName1",
@@ -45,14 +38,7 @@ RSpec.describe "Authorization", type: :request do
                       password_confirmation: "85kseOlqqp!v1@a7"
                       )
 
-    # Generate a valid JSON web token that indicates a student role for testing purposes
-    key = Rails.application.credentials.secret_key_base
-    header = Base64.urlsafe_encode64("{\"alg\":\"HS256\"}")
-    student_role_payload = Base64.urlsafe_encode64("{\"id\":#{user.id},\"role\":\"student\"}")
-    header_and_payload = header + "." + student_role_payload
-    hashed_header_and_payload = OpenSSL::HMAC.digest(OpenSSL::Digest.new("sha256"), key, header_and_payload)
-    signature = Base64.urlsafe_encode64(hashed_header_and_payload).gsub("=", "")
-    student_token = header + "." + student_role_payload + "." + signature
+    student_token = SpecHelper.generate_token(student)
 
     # If a student tries to access an admin dashboard, return a 404
     get "/api/v1/admin/dashboard", params: {}, headers: { TOKEN: student_token}

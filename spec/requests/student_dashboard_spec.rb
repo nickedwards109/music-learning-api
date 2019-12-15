@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe "Student Dashboard", type: :request do
   it "responds with the student's name" do
-    user = User.create(
+    student = User.create(
                       role: :student,
                       first_name: "FirstName1",
                       last_name: "LastName1",
@@ -11,18 +11,11 @@ RSpec.describe "Student Dashboard", type: :request do
                       password_confirmation: "85kseOlqqp!v1@a7"
                       )
 
-    # Generate a valid JSON web token that indicates an admin role for testing purposes
-    key = Rails.application.credentials.secret_key_base
-    header = Base64.urlsafe_encode64("{\"alg\":\"HS256\"}")
-    student_role_payload = Base64.urlsafe_encode64("{\"id\":#{user.id},\"role\":\"student\"}")
-    header_and_payload = header + "." + student_role_payload
-    hashed_header_and_payload = OpenSSL::HMAC.digest(OpenSSL::Digest.new("sha256"), key, header_and_payload)
-    signature = Base64.urlsafe_encode64(hashed_header_and_payload).gsub("=", "")
-    student_token = header + "." + student_role_payload + "." + signature
+    student_token = SpecHelper.generate_token(student)
 
     get "/api/v1/student/dashboard", params: {}, headers: { TOKEN: student_token }
     parsed_response = JSON.parse(response.body)
     first_name = parsed_response["firstName"]
-    expect(first_name).to eq(user.first_name)
+    expect(first_name).to eq(student.first_name)
   end
 end

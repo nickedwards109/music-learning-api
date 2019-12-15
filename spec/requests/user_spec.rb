@@ -19,14 +19,7 @@ RSpec.describe "Teachers", type: :request do
                          password_confirmation: "85kseOlqqp!v1@a7"
                          )
 
-    # Generate a valid JSON web token that indicates an admin role for testing purposes
-    key = Rails.application.credentials.secret_key_base
-    header = Base64.urlsafe_encode64("{\"alg\":\"HS256\"}")
-    student_role_payload = Base64.urlsafe_encode64("{\"id\":#{student.id},\"role\":\"student\"}")
-    header_and_payload = header + "." + student_role_payload
-    hashed_header_and_payload = OpenSSL::HMAC.digest(OpenSSL::Digest.new("sha256"), key, header_and_payload)
-    signature = Base64.urlsafe_encode64(hashed_header_and_payload).gsub("=", "")
-    student_token = header + "." + student_role_payload + "." + signature
+    student_token = SpecHelper.generate_token(student)
 
     initial_emails_count = ActionMailer::Base.deliveries.count
     post '/api/v1/send_new_user_email', params: { user: { role: "teacher", first_name: "John", last_name: "Doe", email: "john%40example.com"} }, headers: { "TOKEN": student_token }
@@ -45,14 +38,7 @@ RSpec.describe "Teachers", type: :request do
                         password_confirmation: "85kseOlqqp!v1@a7"
                         )
 
-    # Generate a valid JSON web token that indicates an admin role for testing purposes
-    key = Rails.application.credentials.secret_key_base
-    header = Base64.urlsafe_encode64("{\"alg\":\"HS256\"}")
-    admin_role_payload = Base64.urlsafe_encode64("{\"id\":#{admin.id},\"role\":\"admin\"}")
-    header_and_payload = header + "." + admin_role_payload
-    hashed_header_and_payload = OpenSSL::HMAC.digest(OpenSSL::Digest.new("sha256"), key, header_and_payload)
-    signature = Base64.urlsafe_encode64(hashed_header_and_payload).gsub("=", "")
-    admin_token = header + "." + admin_role_payload + "." + signature
+    admin_token = SpecHelper.generate_token(admin)
 
     initial_emails_count = ActionMailer::Base.deliveries.count
     post '/api/v1/send_new_user_email', params: { user: { role: "teacher", first_name: "John", last_name: "Doe", email: "john%40example.com"} }, headers: { "TOKEN": admin_token }
@@ -71,14 +57,7 @@ RSpec.describe "Teachers", type: :request do
                         password_confirmation: "85kseOlqqp!v1@a7"
                         )
 
-    # Generate a valid JSON web token that indicates an admin role for testing purposes
-    key = Rails.application.credentials.secret_key_base
-    header = Base64.urlsafe_encode64("{\"alg\":\"HS256\"}")
-    admin_role_payload = Base64.urlsafe_encode64("{\"id\":#{admin.id},\"role\":\"admin\"}")
-    header_and_payload = header + "." + admin_role_payload
-    hashed_header_and_payload = OpenSSL::HMAC.digest(OpenSSL::Digest.new("sha256"), key, header_and_payload)
-    signature = Base64.urlsafe_encode64(hashed_header_and_payload).gsub("=", "")
-    admin_token = header + "." + admin_role_payload + "." + signature
+    admin_token = SpecHelper.generate_token(admin)
 
     initial_emails_count = ActionMailer::Base.deliveries.count
     post '/api/v1/send_new_user_email', params: { user: { role: "student", first_name: "John", last_name: "Doe", email: "john%40example.com"} }, headers: { "TOKEN": admin_token }
@@ -115,14 +94,7 @@ RSpec.describe "Teachers", type: :request do
                           password_confirmation: "85kseOlqqp!v1@a7"
                           )
 
-    # Generate a valid JSON web token that indicates a teacher role for testing purposes
-    key = Rails.application.credentials.secret_key_base
-    header = Base64.urlsafe_encode64("{\"alg\":\"HS256\"}")
-    teacher_role_payload = Base64.urlsafe_encode64("{\"id\":#{teacher.id},\"role\":\"teacher\"}")
-    header_and_payload = header + "." + teacher_role_payload
-    hashed_header_and_payload = OpenSSL::HMAC.digest(OpenSSL::Digest.new("sha256"), key, header_and_payload)
-    signature = Base64.urlsafe_encode64(hashed_header_and_payload).gsub("=", "")
-    teacher_token = header + "." + teacher_role_payload + "." + signature
+    teacher_token = SpecHelper.generate_token(teacher)
 
     get "/api/v1/students", headers: { TOKEN: teacher_token }
 
