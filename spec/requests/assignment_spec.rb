@@ -39,6 +39,31 @@ RSpec.describe 'Assignments', type: :request do
     expect(student.lessons.first.title).to eq("This is a lesson title")
   end
 
+  it 'only allows a student to view the lesson if the lesson has been assigned to that student' do
+    student = User.create(
+                          role: :student,
+                          first_name: "StudentFirstName1",
+                          last_name: "StudentLastName1",
+                          email: "student@example.com",
+                          password: "85kseOlqqp!v1@a7",
+                          password_confirmation: "85kseOlqqp!v1@a7"
+                          )
+    lesson = Lesson.create(
+      title: "This is a lesson title",
+      text: "This is the text of a lesson."
+    )
+
+    student_token = SpecHelper.generate_token(student)
+
+    get "/api/v1/lessons/#{lesson.id}", headers: { TOKEN: student_token }
+    expect(response).to have_http_status(404)
+
+    Assignment.create(lesson_id: lesson.id, user_id: student.id)
+
+    get "/api/v1/lessons/#{lesson.id}", headers: { TOKEN: student_token }
+    expect(response).to have_http_status(200)
+  end
+
   it 'cannot be created by a client not authorized as a teacher' do
     student = User.create(
                           role: :student,
