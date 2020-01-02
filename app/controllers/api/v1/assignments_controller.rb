@@ -25,8 +25,13 @@ class Api::V1::AssignmentsController < ApplicationController
     student_id = params[:student_id]
     assignments = Assignment.where(user_id: student_id)
     if assignments.count > 0
-      lesson_ids = assignments.map { |assignment| assignment.lesson_id }
-      render json: { lesson_ids: lesson_ids }
+      lessons = assignments.map do |assignment|
+        {
+          id: assignment.lesson_id,
+          title: Lesson.find(assignment.lesson_id).title
+        }
+      end
+      render json: { lessons: lessons }
     else
       render json: {}, status: 404
     end
