@@ -3,7 +3,7 @@ Rails.application.routes.draw do
     namespace :v1 do
       resources :sessions, only: [:create]
       resources :lessons, only: [:create, :show, :index]
-      resources :assignments, only: [:create]
+      resources :assignments, only: [:create, :index]
 
       get '/students', to: 'users#index'
 

@@ -1,5 +1,6 @@
 class Api::V1::AssignmentsController < ApplicationController
-  before_action :authorize_teacher
+  before_action :authorize_teacher, only: [:create]
+  before_action :authorize_student, only: [:index]
   before_action :verify_signature
 
   def create
@@ -15,6 +16,17 @@ class Api::V1::AssignmentsController < ApplicationController
       AssignmentMailer.with(params: assignment_email_content)
         .new_assignment_email
         .deliver_now
+    else
+      render json: {}, status: 404
+    end
+  end
+
+  def index
+    student_id = params[:student_id]
+    assignments = Assignment.where(user_id: student_id)
+    if assignments.count > 0
+      lesson_ids = assignments.map { |assignment| assignment.lesson_id }
+      render json: { lesson_ids: lesson_ids }
     else
       render json: {}, status: 404
     end
