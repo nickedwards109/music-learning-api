@@ -90,4 +90,39 @@ RSpec.describe 'Assignments', type: :request do
     expect(lesson.students.count).to eq(0)
     expect(student.lessons.count).to eq(0)
   end
+
+  it "responds to a student request for IDs of the student's assigned lessons" do
+    student = User.create(
+                          role: :student,
+                          first_name: "StudentFirstName1",
+                          last_name: "StudentLastName1",
+                          email: "student@example.com",
+                          password: "85kseOlqqp!v1@a7",
+                          password_confirmation: "85kseOlqqp!v1@a7"
+                          )
+
+    student_token = SpecHelper.generate_token(student)
+
+    lesson1 = Lesson.create(
+      title: "This is a lesson title",
+      text: "This is the text of a lesson."
+    )
+
+    lesson2 = Lesson.create(
+      title: "This is a lesson title",
+      text: "This is the text of a lesson."
+    )
+
+    Assignment.create(user_id: student.id, lesson_id: lesson1.id)
+    Assignment.create(user_id: student.id, lesson_id: lesson2.id)
+
+    get "/api/v1/assignments", params: {student_id: student.id}, headers: { TOKEN: student_token }
+
+    parsed_response = JSON.parse(response.body)
+    expect(parsed_response["lesson_ids"].count).to eq(2)
+    expect(parsed_response["lesson_ids"][0]).to eq(lesson1.id)
+
+    get "/api/v1/assignments", params: {student_id: student.id}
+    expect(response).to have_http_status(404)
+  end
 end
