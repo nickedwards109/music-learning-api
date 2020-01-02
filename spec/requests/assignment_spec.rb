@@ -119,8 +119,9 @@ RSpec.describe 'Assignments', type: :request do
     get "/api/v1/assignments", params: {student_id: student.id}, headers: { TOKEN: student_token }
 
     parsed_response = JSON.parse(response.body)
-    expect(parsed_response["lesson_ids"].count).to eq(2)
-    expect(parsed_response["lesson_ids"][0]).to eq(lesson1.id)
+    expect(parsed_response["lessons"].count).to eq(2)
+    expect(parsed_response["lessons"][0]["id"]).to eq(lesson1.id)
+    expect(parsed_response["lessons"][0]["title"]).to eq(lesson1.title)
 
     get "/api/v1/assignments", params: {student_id: student.id}
     expect(response).to have_http_status(404)
