@@ -80,6 +80,8 @@ test:
 #
 production:
   <<: *default
+  adapter: postgresql
   database: music-teaching-app_production
   username: music-teaching-app
+  host: localhost
   password: <%= ENV['MUSIC-TEACHING-APP_DATABASE_PASSWORD'] %>
