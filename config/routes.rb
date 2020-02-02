@@ -7,15 +7,15 @@ Rails.application.routes.draw do
 
       get '/students', to: 'users#index'
 
-      post 'send_new_user_email', to: 'users#send_new_user_email'
+      post 'send-new-user-email', to: 'users#send_new_user_email'
 
-      post 'set_password', to: 'users#set_password'
+      post 'set-password', to: 'users#set_password'
 
-      post 'initiate_password_reset', to: 'users#send_password_reset_email'
+      post 'initiate-password-reset', to: 'users#send_password_reset_email'
 
-      post 'reset_password', to: 'users#reset_password'
+      post 'reset-password', to: 'users#reset_password'
 
-      post 'presigned_upload_url', to: 'assets#presigned_upload_url'
+      post 'presigned-upload-url', to: 'assets#presigned_upload_url'
 
       namespace :admin do
         get 'dashboard', to: 'dashboard#show'
