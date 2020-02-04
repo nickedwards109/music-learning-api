@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe "Teachers", type: :request do
   it "does not send a teacher creation email when the request does not include a token" do
     initial_emails_count = ActionMailer::Base.deliveries.count
-    post '/api/v1/send_new_user_email', params: { user: { role: "teacher", first_name: "John", last_name: "Doe", email: "john%40example.com"} }
+    post '/api/v1/send-new-user-email', params: { user: { role: "teacher", first_name: "John", last_name: "Doe", email: "john%40example.com"} }
     afterward_emails_count = ActionMailer::Base.deliveries.count
     expect(afterward_emails_count).to eq(initial_emails_count)
     expect(response).to have_http_status(404)
@@ -22,7 +22,7 @@ RSpec.describe "Teachers", type: :request do
     student_token = SpecHelper.generate_token(student)
 
     initial_emails_count = ActionMailer::Base.deliveries.count
-    post '/api/v1/send_new_user_email', params: { user: { role: "teacher", first_name: "John", last_name: "Doe", email: "john%40example.com"} }, headers: { "TOKEN": student_token }
+    post '/api/v1/send-new-user-email', params: { user: { role: "teacher", first_name: "John", last_name: "Doe", email: "john%40example.com"} }, headers: { "TOKEN": student_token }
     afterward_emails_count = ActionMailer::Base.deliveries.count
     expect(afterward_emails_count).to eq(initial_emails_count)
     expect(response).to have_http_status(404)
@@ -41,7 +41,7 @@ RSpec.describe "Teachers", type: :request do
     admin_token = SpecHelper.generate_token(admin)
 
     initial_emails_count = ActionMailer::Base.deliveries.count
-    post '/api/v1/send_new_user_email', params: { user: { role: "teacher", first_name: "John", last_name: "Doe", email: "john%40example.com"} }, headers: { "TOKEN": admin_token }
+    post '/api/v1/send-new-user-email', params: { user: { role: "teacher", first_name: "John", last_name: "Doe", email: "john%40example.com"} }, headers: { "TOKEN": admin_token }
     afterward_emails_count = ActionMailer::Base.deliveries.count
     expect(afterward_emails_count).to eq(initial_emails_count + 1)
     expect(response).to have_http_status(204)
@@ -60,7 +60,7 @@ RSpec.describe "Teachers", type: :request do
     admin_token = SpecHelper.generate_token(admin)
 
     initial_emails_count = ActionMailer::Base.deliveries.count
-    post '/api/v1/send_new_user_email', params: { user: { role: "student", first_name: "John", last_name: "Doe", email: "john%40example.com"} }, headers: { "TOKEN": admin_token }
+    post '/api/v1/send-new-user-email', params: { user: { role: "student", first_name: "John", last_name: "Doe", email: "john%40example.com"} }, headers: { "TOKEN": admin_token }
     afterward_emails_count = ActionMailer::Base.deliveries.count
     expect(afterward_emails_count).to eq(initial_emails_count + 1)
     expect(response).to have_http_status(204)

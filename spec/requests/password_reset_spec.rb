@@ -13,7 +13,7 @@ RSpec.describe 'Resetting a password', type: :request do
     initial_password_reset_count = PasswordReset.all.count
     initial_emails_count = ActionMailer::Base.deliveries.count
 
-    post '/api/v1/initiate_password_reset', params: {
+    post '/api/v1/initiate-password-reset', params: {
       user: {
         email: 'john@example.com'
       }
@@ -37,7 +37,7 @@ RSpec.describe 'Resetting a password', type: :request do
     initial_password_reset_count = PasswordReset.all.count
     initial_emails_count = ActionMailer::Base.deliveries.count
 
-    post '/api/v1/initiate_password_reset', params: {
+    post '/api/v1/initiate-password-reset', params: {
       user: {
         email: 'doesnotexist@example.com'
       }
@@ -58,7 +58,7 @@ RSpec.describe 'Resetting a password', type: :request do
     initial_password_reset_count = PasswordReset.all.count
     initial_password_digest = user.password_digest
 
-    post '/api/v1/reset_password', params: {
+    post '/api/v1/reset-password', params: {
       user: {
         uuid: password_reset.uuid,
         password: 'newPassword9t!l93',
@@ -80,7 +80,7 @@ RSpec.describe 'Resetting a password', type: :request do
     initial_password_reset_count = PasswordReset.all.count
     initial_password_digest = user.password_digest
 
-    post '/api/v1/reset_password', params: {
+    post '/api/v1/reset-password', params: {
       user: {
         uuid: '0',
         password: 'newPassword9t!l93',

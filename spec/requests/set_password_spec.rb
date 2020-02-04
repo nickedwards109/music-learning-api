@@ -12,7 +12,7 @@ RSpec.describe 'Setting a password', type: :request do
     user_count_before = User.all.count
     not_yet_created_user_count_before = NotYetCreatedUser.all.count
     uuid = not_yet_created_user.uuid
-    post '/api/v1/set_password', params: {
+    post '/api/v1/set-password', params: {
       user: {
         password: "85kseOlqqp!v1@a7",
         password_confirmation: "85kseOlqqp!v1@a7",
@@ -29,7 +29,7 @@ RSpec.describe 'Setting a password', type: :request do
   it "responds with a 404 to a set password request with an invalid UUID" do
     user_count_before = User.all.count
     not_yet_created_user_count_before = NotYetCreatedUser.all.count
-    post '/api/v1/set_password', params: {
+    post '/api/v1/set-password', params: {
       user: {
         password: "85kseOlqqp!v1@a7",
         password_confirmation: "85kseOlqqp!v1@a7",
