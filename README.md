@@ -15,6 +15,14 @@ Students can view lessons that have been assigned to them. This gives them acces
 
 This application is a work in progress. Please check back later for more updates!
 
+## Local Setup
+Set environment variables to interact with AWS:
+  Copy the file `config/local_env.sample.yml` to `config/local_env.yml`.
+  Log in to the AWS management console and navigate to IAM. Click Manage Access Keys, then Create Access Key. Select the use case for Local Code, then click the Confirmation checkbox and click Next. Write a description of the key like `music-learning-api-local-environment-key`, and click Create Access Key.
+  Copy the Access key and set it in `config/local_env.yml` as `AWS_ACCESS_KEY_ID`. Copy the Secret access key and set it in `config/local_env.yml` as `AWS_SECRET_ACCESS_KEY`.
+
+Further local setup instructions to come ...
+
 ## Database Schema Visualization
 ![Database Schema Visualization](db-schema.png)
 
